@@ -1,5 +1,6 @@
 from glob import glob
 from os import getpid
+import os
 
 from .files import deduplicate_files
 from .files import get_file_name_tokenizer
@@ -15,7 +16,7 @@ SEP = '-'
 
 
 class Fn:
-  def __init__(self, prefix='', postfix='', git_sha_size=7, pid_sha_size=8):
+  def __init__(self, prefix='', postfix='', git_sha_size=5, pid_sha_size=6, milli=True, utc=False):
     self.git_sha_size = git_sha_size
     self.pid_sha_size = pid_sha_size
     self.postfix = postfix
@@ -23,6 +24,8 @@ class Fn:
     self.tokenizer = get_file_name_tokenizer(SEP, git_sha_size, pid_sha_size)
     self.gitsha = _init_git_sha_cmd(self.git_sha_size)
     self.pid_sha = self.__get_pid_time_sha()
+    self.milli = milli
+    self.utc = utc
 
   def __enter__(self):
     return self
@@ -38,14 +41,10 @@ class Fn:
   def __get_pid_time_sha(self):
     return getsha([get_time(), getpid()])[:self.pid_sha_size]
 
-  def name(self, milli=True, postfix=None, utc=True):
-    l = [self.prefix, get_time(milli=milli, utc=utc),
-         SEP, self.gitsha, SEP, self.pid_sha]
-
-    if postfix is not None:
-      l.append(postfix)
-    elif self.postfix:
-      l.append(self.postfix)
+  @property
+  def name(self):
+    l = [self.prefix, get_time(milli=self.milli, utc=self.utc),
+         SEP, self.gitsha, SEP, self.pid_sha, self.postfix]
     return ''.join(l)
 
   def _get_current_files(self, d='.', path_style='rel', ext=True):
@@ -95,4 +94,7 @@ class Fn:
     current = list(self._get_current_files(d))
     if current:
       yield current[-1]['prochash']
+      
+  
+    
 

@@ -1,5 +1,7 @@
 # FN—File Names
 
+## note
+This is forked from [Anders Hoff's Fn](https://github.com/inconvergent/fn)
 
 ## What is it?
 

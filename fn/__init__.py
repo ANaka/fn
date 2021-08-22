@@ -54,7 +54,7 @@ from fn.fn import Fn
 from fn.utils import get_time
 from fn.utils import head_tail
 from fn.utils import overlay
-from fn.namer import Namer, get_current_plot_id, new_plot_id
+from fn.namer import Namer, get_current_plot_id, new_plot_id, new_nft_id, get_current_nft_id
 
 def handle_path_args(args):
   path_style = 'rel' # relative path style: dir/file.ext

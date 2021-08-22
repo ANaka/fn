@@ -7,8 +7,10 @@ def get_plot_id():
     return os.environ['plot_id']
 
 class Namer(Fn):
-  
-    session = boto3.Session(profile_name='naka')
+    try:
+        session = boto3.Session(profile_name='naka')
+    except:
+        session = boto3.Session()
     s3 = session.client('s3')
   
     def save_plot_id(self, Bucket='algorithmic-ink', Key='current_plot_id'):
